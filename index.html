@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a1a1a">
+    <title>Messaggio Autodistruttivo 🔥</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .message-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+        }
+
+        .message-box.destroying {
+            animation: glitch 0.5s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        .warning {
+            color: #ff0000;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.5; }
+        }
+
+        h1 {
+            color: #ff0000;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #ff0000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 48px;
+            color: #ff0000;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background: #cc0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        button.secondary {
+            background: #0066ff;
+        }
+
+        button.secondary:hover {
+            background: #0052cc;
+        }
+
+        button.success {
+            background: #00cc00;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #0f0;
+            font-size: 14px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #ff0000;
+            color: #0f0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .link-display {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #0f0;
+            margin-bottom: 15px;
+            word-break: break-all;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #0f0;
+        }
+
+        .destroyed {
+            text-align: center;
+            font-size: 24px;
+            color: #ff0000;
+        }
+
+        .info-box {
+            background: rgba(0, 102, 255, 0.1);
+            border: 1px solid #0066ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #66ccff;
+            line-height: 1.6;
+        }
+
+        .share-info {
+            background: rgba(255, 153, 0, 0.1);
+            border: 1px solid #ff9900;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #ffcc66;
+        }
+
+        .alert-box {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid #ff0000;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .alert-box h3 {
+            color: #ff0000;
+            margin-bottom: 10px;
+        }
+
+        .alert-box p {
+            color: #ff9999;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message-box" id="messageBox">
+            <div class="warning">⚠️ QUESTO MESSAGGIO SI AUTODISTRUGGERÀ ⚠️</div>
+            <h1>MESSAGGIO AUTODISTRUTTIVO 🔥</h1>
+            
+            <!-- Modalità Creazione -->
+            <div id="createMode">
+                <div class="input-group">
+                    <label for="messageInput">Scrivi il tuo messaggio segreto:</label>
+                    <textarea id="messageInput" placeholder="Inserisci il messaggio che si autodistruggerà..."></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label for="timerInput">Secondi prima dell'autodistruzione:</label>
+                    <input type="number" id="timerInput" value="10" min="3" max="60">
+                </div>
+                
+                <button onclick="generaLink()">🔥 GENERA LINK</button>
+
+                <div class="alert-box">
+                    <h3>⚠️ COME METTERE ONLINE L'APP</h3>
+                    
+                    <div style="text-align: left; margin-top: 15px;">
+                        <p style="color: #0f0; font-weight: bold; margin-bottom: 10px;">🚀 OPZIONE 1: NETLIFY (PIÙ VELOCE - 2 MINUTI)</p>
+                        <p>1. Salva questa pagina: Tasto destro → "Salva con nome" → <strong>index.html</strong></p>
+                        <p>2. Vai su: <strong>app.netlify.com/drop</strong></p>
+                        <p>3. <strong>Trascina</strong> il file index.html nella pagina</p>
+                        <p>4. ✅ Link pronto! Es: <strong>nome-random.netlify.app</strong></p>
+                        <p>5. (Opzionale) Cambia nome in: <strong>messaggio-segreto.netlify.app</strong></p>
+                        
+                        <hr style="border-color: #ff0000; margin: 20px 0;">
+                        
+                        <p style="color: #0f0; font-weight: bold; margin-bottom: 10px;">🌐 OPZIONE 2: GITHUB PAGES (5 MINUTI)</p>
+                        <p><strong>Passo 1:</strong> Vai su <strong>github.com</strong> e crea un account (gratis)</p>
+                        <p><strong>Passo 2:</strong> Clicca il pulsante <strong>"+" in alto a destra</strong> → <strong>"New repository"</strong></p>
+                        <p><strong>Passo 3:</strong> Nome repository: <strong>messaggio-segreto</strong></p>
+                        <p><strong>Passo 4:</strong> Seleziona <strong>✅ Public</strong> e <strong>✅ Add a README file</strong></p>
+                        <p><strong>Passo 5:</strong> Clicca <strong>"Create repository"</strong></p>
+                        <p><strong>Passo 6:</strong> Clicca <strong>"Add file"</strong> → <strong>"Create new file"</strong></p>
+                        <p><strong>Passo 7:</strong> Nome file: <strong>index.html</strong></p>
+                        <p><strong>Passo 8:</strong> <strong>Copia e incolla</strong> tutto il codice di questa pagina</p>
+                        <p><strong>Passo 9:</strong> Clicca <strong>"Commit changes"</strong> (pulsante verde)</p>
+                        <p><strong>Passo 10:</strong> Vai su <strong>Settings</strong> (tab in alto)</p>
+                        <p><strong>Passo 11:</strong> Nel menu a sinistra clicca <strong>"Pages"</strong></p>
+                        <p><strong>Passo 12:</strong> Source: <strong>"Deploy from a branch"</strong></p>
+                        <p><strong>Passo 13:</strong> Branch: <strong>"main"</strong> → Folder: <strong>"/ (root)"</strong> → <strong>Save</strong></p>
+                        <p><strong>Passo 14:</strong> Aspetta 1-2 minuti</p>
+                        <p><strong>Passo 15:</strong> ✅ Link pronto: <strong>tuonome.github.io/messaggio-segreto</strong></p>
+                        
+                        <hr style="border-color: #ff0000; margin: 20px 0;">
+                        
+                        <p style="color: #0f0; font-weight: bold; margin-bottom: 10px;">📦 OPZIONE 3: VERCEL (3 MINUTI)</p>
+                        <p>1. Salva come <strong>index.html</strong></p>
+                        <p>2. Vai su: <strong>vercel.com</strong> → Registrati</p>
+                        <p>3. Clicca <strong>"Add New"</strong> → <strong>"Project"</strong></p>
+                        <p>4. Trascina il file o importa da GitHub</p>
+                        <p>5. ✅ Link pronto: <strong>nome-progetto.vercel.app</strong></p>
+                        
+                        <hr style="border-color: #ff0000; margin: 20px 0;">
+                        
+                        <p style="color: #ffff00; font-weight: bold;">💡 CONSIGLIO: Usa Netlify per la soluzione più veloce!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modalità Condivisione -->
+            <div id="shareMode" style="display: none;">
+                <p style="color: #0f0; text-align: center; margin-bottom: 15px; font-weight: bold;">✅ Link generato con successo!</p>
+                
+                <div class="input-group">
+                    <label>Il tuo link segreto:</label>
+                    <div class="link-display" id="linkDisplay"></div>
+                </div>
+
+                <div class="button-group">
+                    <button class="success" onclick="copiaLink()">📋 Copia Link</button>
+                    <button class="secondary" onclick="condividiWhatsApp()">📱 WhatsApp</button>
+                </div>
+
+                <button onclick="nuovoMessaggio()">Crea Nuovo Messaggio</button>
+
+                <div class="share-info">
+                    <p><strong>📱 Come funziona:</strong></p>
+                    <p>1. Copia il link generato</p>
+                    <p>2. Invialo su WhatsApp/Telegram/SMS</p>
+                    <p>3. Il destinatario clicca il link</p>
+                    <p>4. Il messaggio si apre e si autodistrugge! 💥</p>
+                </div>
+            </div>
+            
+            <!-- Modalità Lettura -->
+            <div id="viewMode" style="display: none;">
+                <div id="messageContent" style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 5px; color: #0f0; margin-bottom: 15px; min-height: 100px; word-wrap: break-word; white-space: pre-wrap;"></div>
+                <div class="timer" id="countdown"></div>
+                <div class="status">Il messaggio verrà eliminato automaticamente...</div>
+                <button onclick="distruggiOra()" style="background: #ff6600;">💥 Distruggi Ora</button>
+            </div>
+            
+            <!-- Messaggio Già Letto -->
+            <div id="alreadyReadMode" style="display: none;">
+                <div class="destroyed">
+                    <p>🚫 ACCESSO NEGATO 🚫</p>
+                    <p style="font-size: 16px; margin-top: 20px;">Questo messaggio è già stato letto e distrutto.</p>
+                </div>
+                <button onclick="nuovoMessaggio()">Crea Nuovo Messaggio</button>
+            </div>
+            
+            <!-- Messaggio Distrutto -->
+            <div id="destroyedMode" style="display: none;">
+                <div class="destroyed">
+                    <p>💥 MESSAGGIO DISTRUTTO 💥</p>
+                    <p style="font-size: 16px; margin-top: 20px;">Tutti i dati sono stati cancellati definitivamente.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let countdown;
+
+        function encode(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+
+        function decode(str) {
+            try {
+                return decodeURIComponent(escape(atob(str)));
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function generaLink() {
+            const messaggio = document.getElementById('messageInput').value;
+            const timer = parseInt(document.getElementById('timerInput').value);
+
+            if (!messaggio.trim()) {
+                alert('❌ Inserisci un messaggio!');
+                return;
+            }
+
+            const msgId = 'id' + Date.now() + Math.random().toString(36).substr(2, 6);
+            const encodedMsg = encode(messaggio);
+            const encodedTime = encode(timer.toString());
+            
+            // Salva nel localStorage
+            const allMessages = JSON.parse(localStorage.getItem('allMsgs') || '{}');
+            allMessages[msgId] = {
+                msg: encodedMsg,
+                time: encodedTime,
+                read: false
+            };
+            localStorage.setItem('allMsgs', JSON.stringify(allMessages));
+            
+            // Genera URL
+            let baseURL = window.location.href.split('?')[0].split('#')[0];
+            
+            // Se è un URL locale, mostra un placeholder
+            if (baseURL.includes('about:') || baseURL.includes('file://')) {
+                baseURL = 'https://tuosito.com/messaggio.html';
+            }
+            
+            const shareURL = `${baseURL}?id=${msgId}`;
+            
+            document.getElementById('linkDisplay').textContent = shareURL;
+            document.getElementById('createMode').style.display = 'none';
+            document.getElementById('shareMode').style.display = 'block';
+        }
+
+        function copiaLink() {
+            const link = document.getElementById('linkDisplay').textContent;
+            
+            navigator.clipboard.writeText(link).then(() => {
+                alert('✅ Link copiato negli appunti!');
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = link;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('✅ Link copiato!');
+            });
+        }
+
+        function condividiWhatsApp() {
+            const link = document.getElementById('linkDisplay').textContent;
+            const testo = '🔥 Messaggio segreto autodistruttivo!\n\nClicca qui per leggerlo prima che si distrugga:\n' + link;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: '🔥 Messaggio Segreto',
+                    text: testo
+                }).catch(() => {
+                    window.open('https://wa.me/?text=' + encodeURIComponent(testo), '_blank');
+                });
+            } else {
+                window.open('https://wa.me/?text=' + encodeURIComponent(testo), '_blank');
+            }
+        }
+
+        function checkURL() {
+            const params = new URLSearchParams(window.location.search);
+            const msgId = params.get('id');
+
+            if (msgId) {
+                const allMessages = JSON.parse(localStorage.getItem('allMsgs') || '{}');
+                const readMessages = JSON.parse(localStorage.getItem('readMsgs') || '{}');
+                
+                if (!allMessages[msgId] || readMessages[msgId]) {
+                    document.getElementById('createMode').style.display = 'none';
+                    document.getElementById('alreadyReadMode').style.display = 'block';
+                    return;
+                }
+                
+                readMessages[msgId] = Date.now();
+                localStorage.setItem('readMsgs', JSON.stringify(readMessages));
+                
+                const data = allMessages[msgId];
+                const messaggio = decode(data.msg);
+                const timer = parseInt(decode(data.time));
+
+                if (messaggio && timer) {
+                    document.getElementById('createMode').style.display = 'none';
+                    document.getElementById('messageContent').textContent = messaggio;
+                    document.getElementById('viewMode').style.display = 'block';
+                    avviaCountdown(timer);
+                }
+            }
+        }
+
+        function avviaCountdown(secondi) {
+            let timeLeft = secondi;
+            document.getElementById('countdown').textContent = timeLeft;
+
+            countdown = setInterval(() => {
+                timeLeft--;
+                document.getElementById('countdown').textContent = timeLeft;
+
+                if (timeLeft <= 3) {
+                    document.getElementById('messageBox').classList.add('destroying');
+                }
+
+                if (timeLeft <= 0) {
+                    distruggiMessaggio();
+                }
+            }, 1000);
+        }
+
+        function distruggiMessaggio() {
+            clearInterval(countdown);
+            
+            document.getElementById('viewMode').style.display = 'none';
+            document.getElementById('destroyedMode').style.display = 'block';
+            document.getElementById('messageBox').classList.remove('destroying');
+
+            setTimeout(() => {
+                window.location.href = window.location.href.split('?')[0];
+            }, 3000);
+        }
+
+        function distruggiOra() {
+            if (confirm('🚨 Sei sicuro di voler distruggere il messaggio ora?')) {
+                distruggiMessaggio();
+            }
+        }
+
+        function nuovoMessaggio() {
+            window.location.href = window.location.href.split('?')[0];
+        }
+
+        window.onload = checkURL;
+    </script>
+</body>
+</html>
