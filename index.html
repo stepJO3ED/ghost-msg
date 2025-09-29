@@ -318,24 +318,14 @@
             const encodedMsg = encode(messaggio);
             const encodedTime = encode(timer.toString());
             
-            // Salva nel localStorage
-            const allMessages = JSON.parse(localStorage.getItem('allMsgs') || '{}');
-            allMessages[msgId] = {
-                msg: encodedMsg,
-                time: encodedTime,
-                read: false
-            };
-            localStorage.setItem('allMsgs', JSON.stringify(allMessages));
-            
-            // Genera URL
+            // Genera URL con messaggio codificato DENTRO il link
             let baseURL = window.location.href.split('?')[0].split('#')[0];
             
-            // Se è un URL locale, mostra un placeholder
             if (baseURL.includes('about:') || baseURL.includes('file://')) {
-                baseURL = 'https://tuosito.com/messaggio.html';
+                baseURL = 'https://tuosito.com/ghost-msg';
             }
             
-            const shareURL = `${baseURL}?id=${msgId}`;
+            const shareURL = `${baseURL}?id=${msgId}&m=${encodedMsg}&t=${encodedTime}`;
             
             document.getElementById('linkDisplay').textContent = shareURL;
             document.getElementById('createMode').style.display = 'none';
@@ -377,23 +367,26 @@
         function checkURL() {
             const params = new URLSearchParams(window.location.search);
             const msgId = params.get('id');
+            const encodedMsg = params.get('m');
+            const encodedTime = params.get('t');
 
-            if (msgId) {
-                const allMessages = JSON.parse(localStorage.getItem('allMsgs') || '{}');
+            if (msgId && encodedMsg && encodedTime) {
+                // Controlla se già letto
                 const readMessages = JSON.parse(localStorage.getItem('readMsgs') || '{}');
                 
-                if (!allMessages[msgId] || readMessages[msgId]) {
+                if (readMessages[msgId]) {
                     document.getElementById('createMode').style.display = 'none';
                     document.getElementById('alreadyReadMode').style.display = 'block';
                     return;
                 }
                 
+                // Segna come letto
                 readMessages[msgId] = Date.now();
                 localStorage.setItem('readMsgs', JSON.stringify(readMessages));
                 
-                const data = allMessages[msgId];
-                const messaggio = decode(data.msg);
-                const timer = parseInt(decode(data.time));
+                // Decodifica il messaggio
+                const messaggio = decode(encodedMsg);
+                const timer = parseInt(decode(encodedTime));
 
                 if (messaggio && timer) {
                     document.getElementById('createMode').style.display = 'none';
