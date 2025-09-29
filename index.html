@@ -373,9 +373,17 @@
             clearInterval(timer);
             document.getElementById('mainBox').classList.remove('shake');
             showScreen('destroyedScreen');
+            
+            // Chiudi la pagina dopo 2 secondi
             setTimeout(() => {
-                window.location.href = window.location.href.split('?')[0];
-            }, 3000);
+                // Prova a chiudere la finestra
+                window.close();
+                
+                // Se non si chiude (browser blocca), reindirizza
+                setTimeout(() => {
+                    window.location.href = 'about:blank';
+                }, 500);
+            }, 2000);
         }
 
         function destroyNow() {
